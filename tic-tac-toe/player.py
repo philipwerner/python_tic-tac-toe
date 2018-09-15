@@ -7,6 +7,7 @@ class Player(object):
     def __init__(self, name, marker=None, position=None):
         """Initializer for the player class."""
         self.name = name
+        self.wins = 0
         self.marker = None
         self.number = None
         self.position = None
