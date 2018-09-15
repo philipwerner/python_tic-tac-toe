@@ -10,17 +10,18 @@ class Board(object):
 
     def place_marker(self, input, marker):
         """Place marker on board."""
-        try:
-            input = int(input)
-        except ValueError:
-            raise ValueError
-        if input > 9 or input < 1:
+        if input == 'quit':
+            quit()
+        int_input = int(input)
+        if int_input > 9 and int_input < 1:
             raise ValueError("Please enter a integer between 1 and 9")
-        for x in range(15):
-            if self.current[x] == input:
-                self.current[x] = marker
+        elif int_input < 10 and int_input > 0:
+            for x in range(0, 15):
+                if self.current[x] == input:
+                    self.current[x] = marker
         else:
-            raise ValueError("Please choose a available position.")
+            print("Please choose a available position.")
+        return self
 
     def draw_board(self):
         """Display the current board."""
@@ -42,23 +43,23 @@ class Board(object):
         check = self.current
         x = 0
         # Check for horizontal winner
-        while x < 11:
-            if check[x] == check[x + 2] and check[x] == check[x + 4]:
-                return check[x]
-            elif x < 6:
-                x += 5
-            else:
-                x = 0
+        if check[x] == check[x + 2] and check[x] == check[x + 4]:
+            return check[x]
+        elif check[x + 5] == check[x + 7] and check[x + 5] == check[x + 9]:
+            return check[x + 5]
+        elif check[x + 10] == check[x + 12] and check[x + 10] == check[x + 14]:
+            return check[x + 10]
+
         # Check for vertical winner
-        while x < 4:
-            if check[x] == check[x + 5] and check[x] == check[x + 10]:
-                return check[x]
-            elif x < 5:
-                x += 2
-            else:
-                x = 0
+        elif check[x] == check[x + 5] and check[x] == check[x + 10]:
+            return check[x]
+        elif check[x + 2] == check[x + 7] and check[x + 2] == check[x + 12]:
+            return check[x + 2]
+        elif check[x + 4] == check[x + 9] and check[x + 3] == check[x + 14]:
+            return check[x + 3]
+
         # Check for top left to bottom right diagonal win
-        if check[0] == check[7] and check[0] == check[14]:
+        elif check[0] == check[7] and check[0] == check[14]:
             return check[0]
         # Check for top right to bottom left diagonal win
         elif check[4] == check[7] and check[4] == check[10]:

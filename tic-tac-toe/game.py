@@ -8,7 +8,6 @@ class Game(object):
 
     def __init__(self):
         """Initializer for the game class."""
-        self.player_turn = 1
         self.player_one = None
         self.player_two = None
         self._moves = 0
@@ -21,6 +20,7 @@ class Game(object):
 
     def prompt_players(self):
         """Get player names."""
+        print('Welcome to Tic-Tac-Toe!')
         print('Player 1, what is your name?')
         name1 = input()
         print('Player 2, what is your name?')
@@ -29,51 +29,76 @@ class Game(object):
 
     def create_players(self, name1, name2):
         """Create a player."""
-        if self.player_one is None:
-            self.player_one = Player(name1, 'X', 1)
-        elif self.player_one and self.player_two is None:
-            self.player_two = Player(name2, 'O', 2)
-        self.prompt_move()
+        self.player_one = Player(name1, 'X', 1)
+        self.player_two = Player(name2, 'O', 2)
+        self.prompt_player_one()
 
-    def prompt_move(self):
-        """Prompt player move."""
+    def prompt_player_one(self):
+        """Prompt player one."""
         self.board.draw_board()
+        print(self.player_one.name + ' please pick a position.')
+        move = input()
+        self.board.place_marker(move, 'X')
+        self._moves += 1
+        if self._moves > 4:
+            if self.is_winner(self.board) == '#$':
+                self.prompt_player_two()
+        else:
+            self.prompt_player_two()
 
-        if self.player_turn == 1:
-            print(self.player_one.name + ' please pick a position.')
-            try:
-                move = input()
-                self.board.place_marker(move, self.player_one.marker)
-                self._moves += 1
-            except ValueError:
-                self.prompt_move()
+    def prompt_player_two(self):
+        """Prompt player two."""
+        self.board.draw_board()
+        print(self.player_two.name + ' please pick a position.')
+        try:
+            move = input()
+            self.board.place_marker(move, 'O')
+            self._moves += 1
             if self._moves > 4:
                 if self.is_winner(self.board) == '#$':
-                    pass
-            self.player_turn = 2
-            self.prompt_move()
-        if self.player_turn == 2:
-            print(self.player_two.name + ' please pick a position.')
-            try:
-                move = input()
-                self.board.place_marker(move, self.player_two.marker)
-                self._moves += 1
-            except ValueError:
-                self.prompt_move()
-            if self._moves > 4:
-                if self.is_winner(self.board) == '#$':
-                    pass
-            self.player_turn = 1
-            self.prompt_move()
+                    self.prompt_player_one()
+        except ValueError:
+            self.prompt_player_two()
+        self.prompt_player_one()
 
     def is_winner(self, board_status):
         """Verify if there is a winner."""
         result = board_status.check_winner()
         if result == 'X':
-            print(self.player_one.name + 'WINS!!!!')
-            self.start_game()
+            self.player_one.wins += 1
+            print(self.player_one.name + ' WINS!!!!')
+            self.play_again()
         elif result == 'O':
-            print(self.player_twon.name + 'WINS!!!!')
-            self.start_game()
+            self.player_two.wins += 1
+            print(self.player_twon.name + ' WINS!!!!')
+            self.play_again()
+        elif self._moves == 9:
+            print('It is a draw.')
+            self.play_again()
         else:
             return '#$'
+
+    def play_again(self):
+        """Check if another game is to be played."""
+        print('Would you like to play again?(y/n or yes/no)')
+        reply = input().lower()
+        if reply == 'y' or reply == 'yes':
+            self._moves = 0
+            self.start_game()
+        elif reply == 'n' or reply == 'no':
+            quit()
+        else:
+            print('Please enter y/n or yes/no')
+            self.play_again()
+
+    # def play_again_players(self):
+    #     """Check if same players are playing."""
+    #     print('Is player one still ' + {self.player_one.name} + '?')
+    #     reply = input().lower()
+    #     if reply == 'y' or reply == 'yes':
+    #         pass
+    #     elif reply == 'n' or reply == 'no':
+    #         quit()
+    #     else:
+    #         print('Please enter y/n or yes/no')
+    #         self.play_again()
