@@ -91,14 +91,37 @@ class Game(object):
             print('Please enter y/n or yes/no')
             self.play_again()
 
-    # def play_again_players(self):
-    #     """Check if same players are playing."""
-    #     print('Is player one still ' + {self.player_one.name} + '?')
-    #     reply = input().lower()
-    #     if reply == 'y' or reply == 'yes':
-    #         pass
-    #     elif reply == 'n' or reply == 'no':
-    #         quit()
-    #     else:
-    #         print('Please enter y/n or yes/no')
-    #         self.play_again()
+    def same_players(self):
+        """Check if same players are playing."""
+        print('Is player one still ' + self.player_one.name + '?')
+        reply = input().lower()
+        if reply == 'y' or reply == 'yes':
+            print('Is player two still ' + self.player_two.name + '?')
+            reply_two = input().lower()
+            if reply_two == 'y' or reply_two == 'yes':
+                print(self.player_one.name + ' has ' + self.player_one.wins + ' wins.')
+                print(self.player_two.name + ' has ' + self.player_two.wins + ' wins.')
+                self.prompt_player_one()
+            elif reply_two == 'n' or reply_two == 'no':
+                print("Enter a name for player two.")
+                new_name = input()
+                self.player_two = Player(new_name, 'O', 2)
+                self.prompt_player_one()
+        elif reply == 'n' or reply == 'no':
+                print("Enter a name for player one.")
+                new_name = input()
+                self.player_one = Player(new_name, 'X', 1)
+                print('Welcome ' + self.player_one.name + ', is player two the same player?')
+                reply_two = input()
+                if reply_two == 'y' or reply_two == 'yes':
+                    print(self.player_one.name + ' has ' + self.player_one.wins + ' wins.')
+                    print(self.player_two.name + ' has ' + self.player_two.wins + ' wins.')
+                    self.prompt_player_one()
+                elif reply_two == 'n' or reply_two == 'no':
+                    print("Enter a name for player two.")
+                    new_name = input()
+                    self.player_two = Player(new_name, 'O', 2)
+                    self.prompt_player_one()
+        else:
+            print('Thank you for playing.')
+            exit()
